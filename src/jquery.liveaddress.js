@@ -137,6 +137,25 @@
 				EventHandlers[eventType] = function(event, data) {
 					userHandler(event, data, previousHandler);
 				};
+
+				// Save away previousHandler so it can be restored in an 'off' operation
+				EventHandlers[eventType].previousHandler = previousHandler;
+			},
+			off: function(eventTypes)
+			{
+				if (!eventTypes)
+					eventTypes = Object.keys(EventHandlers);
+
+				if (typeof eventTypes === 'string')
+					eventTypes = [eventTypes];
+
+				for (var i = 0; i < eventTypes.length; i++)
+				{
+					var eventType = eventTypes[i];
+					var previousHandler = EventHandlers[eventType].previousHandler;
+					if (previousHandler)
+						EventHandlers[eventType] = previousHandler;
+				}
 			},
 			mapFields: function(map)
 			{
